@@ -378,8 +378,7 @@ class MetaNode:
                                 self.tree.computational_expansions += 1
 
                                 if self.tree.computational_expansions % 1000 == 0:
-                                    print(f"did {self.tree.computational_expansions} computational expansion. longest expansion so far is {
-                                          self.tree.max_num_expansions}, number of metanodes is {len(self.tree.nodes)}, current node is {root} with edgelength {len(self.edges)}")
+                                    print(f"did {self.tree.computational_expansions} computational expansion. longest expansion so far is {self.tree.max_num_expansions}, number of metanodes is {len(self.tree.nodes)}, current node is {root} with edgelength {len(self.edges)}")
 
                                 if key not in self.tree.nodes:
 
@@ -401,8 +400,7 @@ class MetaNode:
                                 self.tree.computational_expansions += 1
 
                                 if self.tree.computational_expansions % 1000 == 0:
-                                    print(f"did {self.tree.computational_expansions} computational expansion. longest expansion so far is {
-                                          self.tree.max_num_expansions}, number of metanodes is {len(self.tree.nodes)}, current node is {root} with edgelength {len(self.edges)}")
+                                    print(f"did {self.tree.computational_expansions} computational expansion. longest expansion so far is {self.tree.max_num_expansions}, number of metanodes is {len(self.tree.nodes)}, current node is {root} with edgelength {len(self.edges)}")
 
                                 if key not in self.tree.nodes:
                                     self.tree.nodes[key] = MetaNode(
@@ -658,7 +656,7 @@ def sum(state):
 def average_computation(state,policy, max_depth):
     if np.sum(state[0]) == max_depth-1:
         return 0
-    state_policy = policy[*state]
+    state_policy = policy[state]
     val = 0
     if state_policy[-1]:
         val = np.sum(state[0])
