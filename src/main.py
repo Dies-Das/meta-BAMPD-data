@@ -12,5 +12,10 @@ if __name__=="__main__":
     generate_plots_individual()
     generate_plots_comp()
     generate_best_fit()
-    generate_plots_maximum_expansions([1,2,3])
-    generate_plots_maximum_beliefs([1,2,3])
+    
+    #Here we show that our solutions are robust to the approximation schemes
+    
+    #This is for k_c
+    generate_plots_maximum_expansions([1,2,3])		
+    #This is for k, the values to put in are k/2. Your PC may run into memory issues. Use values more than 7 carefully (i.e. k>14).
+    generate_plots_maximum_beliefs([3,4,5])
