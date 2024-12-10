@@ -1,5 +1,7 @@
 # meta-BAMDP
-
+**Note for readers coming from the arXiv paper:**  
+The version of the code used in the paper is available under the [v1.0 release](https://github.com/Dies-Das/meta-BAMPD-data/releases/tag/v1.0).  
+For the most up-to-date code, please refer to the main branch.
 ## Project Description and Motivation
 
 In this project we formulate and solve a meta version of a BAMDP problem for two-armed Bernoulli bandit (TABB) task. The file convexity_1comp.py obtains the solution of the meta-BAMDP using the myopic assumption (i.e. k=2 from the manuscript). The file meta_tree.py shows a more general implementation and allows to solve the meta-BAMDP for more relaxed assumptions. All the other files either have helper functions, or are used for making plots. 
