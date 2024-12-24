@@ -1,0 +1,6 @@
+bin/
+build/
+.vscode
+*.npy
+__pycache__
+*.png
