@@ -33,14 +33,14 @@ struct GreedyPolicy
         // if we're at maximum depth, our reward is just the winning probability of our action
         if (current.sum() == max_depth - 1)
         {
-            for (int k = 0; 2 * k < probabilities.size(); k++)
+            for (int k = 0;  k < probabilities.size(); k++)
             {
                 item.expeced_gains.push_back(probabilities[k]);
             }
             policy[current] = item;
             return item;
         }
-        for (int k = 0; 2 * k < current.data.size(); k++)
+        for (int k = 0;  k < current.data.size(); k++)
         {
             State winning_child = current;
             winning_child[2 * k] += 1;

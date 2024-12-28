@@ -15,9 +15,9 @@ MStateResult check_m_state(
     double maxVal = *std::max_element(belief_gains.begin(), belief_gains.end());
 
 
-
+    // rewrite this to only loop once both for indices and m-state considerations
     for (std::size_t i = 0; i < belief_gains.size(); ++i) {
-        if (belief_gains[i] == maxVal) {
+        if (belief_gains[i] == maxVal) {// maybe with tolerance? 
             mstate.indices.push_back(i);
         }
     }

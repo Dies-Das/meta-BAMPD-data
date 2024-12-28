@@ -52,7 +52,13 @@ MetaNode::MetaNode(const State _state, const Belief _belief, MetaGraph *_meta)
 
   gains = eval_basegraph(state, belief.first, belief.second, meta->max_depth);
 }
-
+MetaNode::MetaNode(ui _nr_of_arms, MetaGraph* _meta){
+  state.data.resize(2*(int)_nr_of_arms);
+  
+  meta=_meta;
+  belief = Belief{StateSet{state},EdgeSet{}};
+  gains = eval_basegraph(state, belief.first, belief.second, meta->max_depth);
+}
 void MetaNode::expand() {
   std::cout << "Expanding state " << this->state << std::endl;
   if (state.sum() == meta->max_depth - 1) {
@@ -169,7 +175,7 @@ void MetaNode::add_child(ui arm, const Belief &new_belief, bool terminal) {
 }
 
 void MetaNode::computational_expansion(ui terminal_action, ui candidate) {
-
+//check if we can change our mind at all
   // We will use a vector
   std::cout << "Doing computational expansion at state " << this->state
             << ". Greedy action is " << terminal_action

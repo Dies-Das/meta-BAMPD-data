@@ -29,6 +29,8 @@ $ make
 $ ../bin/meta-BAMDP
 ´´´
 So far, the only output (relevant for you) are the belief states corresponding to the metanodes of the metagraph. 
+### TODOs
+- Approximations, i.e. maximum belief size, maximum computations, maximum depth while search
 ## Python
 ### Prerequisites
 

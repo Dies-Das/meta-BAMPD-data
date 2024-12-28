@@ -22,7 +22,7 @@ int main(){
     std::cout << "Execution time (seconds): " << elapsed.count() << "\n";
     std::cout <<"Root values: " <<  greedy.policy[State({0,0,0,0})] << std::endl;
 
-    auto gr = MetaGraph(7,0,0,2);
+    auto gr = MetaGraph(4,0,0,4);
     std::cout << "constructed metagraph" << std::endl;
     std::cout << gr.nodes.size() << std::endl;
     for(auto& [key,item]:gr.nodes){
