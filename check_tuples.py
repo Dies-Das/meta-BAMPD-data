@@ -1,6 +1,6 @@
 # Define the file paths
-file1 = 'cpp.txt'  # File containing tuples like (3,1,0,1,)
-file2 = 'python.txt'  # File containing tuples like (0, 3, 0, 3)
+file2 = 'cpp.txt'  # File containing tuples like (3,1,0,1,)
+file1 = 'python.txt'  # File containing tuples like (0, 3, 0, 3)
 
 # Helper function to read and parse tuples from a file
 def read_tuples(file_path):

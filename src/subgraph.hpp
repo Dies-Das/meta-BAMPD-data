@@ -129,7 +129,7 @@ inline std::pair<StateSet, EdgeSet> subgraph(const State &root, const StateSet &
 // Get the gain estimates based on our belief. Will be needed in the Metagraph to check if we're in a M-State.
 inline std::vector<double> eval_basegraph(const State &root, const StateSet &states, const EdgeSet &edges, const ui max_depth)
 {
-    double current_depth = root.sum();
+    ui current_depth = root.sum();
 
     auto probabilities = get_probabilities(root);
 
@@ -144,15 +144,17 @@ inline std::vector<double> eval_basegraph(const State &root, const StateSet &sta
         auto winning_child = root;
         winning_child[2 * k] += 1;
         // if the child is in our belief, we need to continue traversing the belief and backpropagate the expected gains
+        auto temp1 = states.find(winning_child) != states.end();
+        auto temp2 = edges.find({root, winning_child}) != edges.end();
         if (states.find(winning_child) != states.end() && edges.find({root, winning_child}) != edges.end())
         {
-            auto [sub_graph_states, sub_graph_edges] = subgraph(winning_child, states, edges, max_depth);
-            auto gains = eval_basegraph(winning_child, sub_graph_states, sub_graph_edges, max_depth);
+            //auto [sub_graph_states, sub_graph_edges] = subgraph(winning_child, states, edges, max_depth);
+            auto gains = eval_basegraph(winning_child, states, edges, max_depth);
             auto max = *std::max_element(gains.begin(), gains.end());
             result[k] += probabilities[k] * (max + 1.0);
             auto losing_child = root;
             losing_child[2 * k + 1] += 1;
-            gains = eval_basegraph(losing_child, sub_graph_states, sub_graph_edges, max_depth);
+            gains = eval_basegraph(losing_child, states, edges, max_depth);
             max = *std::max_element(gains.begin(), gains.end());
             result[k] += (1 - probabilities[k]) * (max);
         }

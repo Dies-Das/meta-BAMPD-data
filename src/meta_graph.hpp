@@ -8,7 +8,8 @@
 struct MStateResult
 {
     bool is_m_state;
-    std::vector<std::size_t> indices; // If hasSingleIndex == true, this will contain exactly one element.
+    std::size_t index;
+    std::vector<std::size_t> indices; 
 };
 MStateResult check_m_state(
     const std::vector<double> &A,

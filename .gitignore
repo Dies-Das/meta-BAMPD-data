@@ -4,3 +4,4 @@ build/
 *.npy
 __pycache__
 *.png
+.cache
