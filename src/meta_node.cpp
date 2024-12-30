@@ -266,7 +266,7 @@ void MetaNode::computational_expansion(ui terminal_action, ui candidate) {
           if (m_result.is_m_state && arm != m_result.index) {
             continue;
           }
-          std::pair<ui,ui> current_arm_values;
+          std::pair<ui,ui> current_arm_values{candidate_expansion[2*arm],candidate_expansion[2*arm+1]};
           if(checked_arm_values.find(current_arm_values)!=checked_arm_values.end()){
             continue;
           }
