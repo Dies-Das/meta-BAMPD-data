@@ -22,7 +22,7 @@ struct MetaNode
     Belief belief;
     std::vector<double> gains;
     map<ui, std::array<MetaNode*,2>> terminal_children;
-    map<ui, std::array<MetaNode*,2>> computational_children;
+    map<ui, std::vector<std::pair<std::array<MetaNode*,2>, ui>>> computational_children;
     
     MetaGraph *meta;
     bool expanded = false;

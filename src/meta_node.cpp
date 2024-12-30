@@ -7,7 +7,7 @@ bool operator<(const Belief &lhs, const Belief &rhs) {
       return false;
     }
   }
-  return true;
+ return true;
 }
 struct ExpansionCandidate {
   Belief belief;
@@ -131,8 +131,9 @@ void MetaNode::expand() {
   }
   // expand all meta child nodes of this one, both for terminal actions and for
   // computations
-  for (auto &action_children : computational_children) {
-    for (auto &meta_child : action_children.second) {
+  for (auto &[key, action_children_vector] : computational_children) {
+    for(auto& action_children: action_children_vector)
+    for (auto &meta_child : action_children.first) {
       meta_child->expand();
     }
   }
@@ -168,9 +169,8 @@ void MetaNode::add_child(ui arm, const Belief &new_belief, bool terminal) {
         std::array<MetaNode *, 2>{&(winning_it->second), &(losing_it->second)});
 
   } else {
-    computational_children.try_emplace(
-        arm,
-        std::array<MetaNode *, 2>{&(winning_it->second), &(losing_it->second)});
+    computational_children[arm].push_back(std::pair
+        {std::array<MetaNode *, 2>{&(winning_it->second), &(losing_it->second)},new_belief.second.size()-belief.second.size()});
   }
 }
 
@@ -226,9 +226,9 @@ void MetaNode::computational_expansion(ui terminal_action, ui candidate) {
   // store the minimal mindchangers
   std::vector<Belief> minimal_mindchangers;
   // store the beliefs we already checked
-  set<Belief, BeliefHash> already_checked;
   while (!current_expansion.empty()) {
     int k = 0;
+    set<Belief, BeliefHash> already_checked;
     for (auto &[current_belief, current_candidates] : current_expansion) {
       // Don't need to check beliefs twice. This is a necessary check, at least
       // for performance.
@@ -261,9 +261,17 @@ void MetaNode::computational_expansion(ui terminal_action, ui candidate) {
         auto &range = arms;
         // Expand the candidate along the chosen arm. Then, if we changed our
         // mind, we found a mindchanger.
+        set<std::pair<ui,ui>, PairHash> checked_arm_values;
         for (auto arm : range) {
           if (m_result.is_m_state && arm != m_result.index) {
             continue;
+          }
+          std::pair<ui,ui> current_arm_values;
+          if(checked_arm_values.find(current_arm_values)!=checked_arm_values.end()){
+            continue;
+          }
+          else{
+            checked_arm_values.emplace(current_arm_values);
           }
           winning_child = candidate_expansion;
           winning_child[2 * arm] += 1;
