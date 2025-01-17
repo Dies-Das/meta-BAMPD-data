@@ -356,3 +356,10 @@ set<State, StateHash> MetaNode::get_candidates(ui candidate) {
   }
   return result;
 }
+
+bool MetaGraph::stop_expansion(State& root_state, State& current_state){
+  if(this->bounds.bounding_type!=BoundingCondition::DEPTH){
+    return false;
+  }
+  return false;
+}
