@@ -200,7 +200,9 @@ void MetaNode::add_child(ui arm, const Belief &new_belief, bool terminal)
   }
   else
   {
-    computational_children[arm].push_back(std::pair{std::array<MetaNode *, 2>{&(winning_it->second), &(losing_it->second)}, new_belief.second.size() - belief.second.size()});
+    auto size = new_belief.second.size() - belief.second.size();
+    size /= 2;
+    computational_children[arm].push_back(std::pair{std::array<MetaNode *, 2>{&(winning_it->second), &(losing_it->second)}, size});
   }
 }
 
@@ -241,7 +243,7 @@ void MetaNode::computational_expansion(ui terminal_action, ui candidate)
     {
       // We changed our mind. Add metanodes for the winning and losing child and
       // insert them to the children of this node.
-      add_child(candidate, belief, false);
+      add_child(candidate, new_belief, false);
     }
     else // We didn't change our mind, so we need to loop.
     {
