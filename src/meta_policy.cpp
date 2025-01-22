@@ -15,23 +15,31 @@ State find_root(const Belief &belief)
 }
 MetaPolicy::MetaPolicy(MetaGraph *_meta, const double _base_cost) : meta(_meta), base_cost(_base_cost)
 {
+  State initial_state;
+  initial_state.data.resize(2 * meta->nr_of_arms);
+  Belief initial_belief = Belief{StateSet{initial_state}, {}};
+  expand(initial_belief);
+  this->root = &data[initial_belief];
 }
 MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
 {
   // check if we already did the node
   auto node_iterator = this->data.find(belief);
-  if (node_iterator == this->data.end())
+  if (node_iterator != this->data.end())
   {
     return node_iterator->second;
   }
 
   MetaPolicyItem result;
+  result.belief = belief;
+  result.gross_gain = 0;
   MetaNode &current_meta = meta->nodes.at(belief);
 
   auto current_root = find_root(belief);
+
   auto probabilities = get_probabilities(current_root);
   // check if we're at the end of the time horizon
-  if (current_root.sum() == meta->max_depth)
+  if (current_root.sum() == meta->max_depth - 1)
   {
     auto max = std::max_element(probabilities.begin(), probabilities.end());
     Action action;
@@ -39,6 +47,7 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     action.cost_of_action = 0;
     action.is_computational = false;
     action.net_gain = *max;
+    result.gross_gain = *max;
     result.actions.push_back(action);
   }
 
@@ -75,18 +84,29 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     {
       max_value = std::max(*max_terminal, *max_computational).net_gain;
     }
-    for(auto& action : terminal){
-      if(action.net_gain==max_value){
+    for (auto &action : terminal)
+    {
+      if (std::abs(action.net_gain-max_value) <1e-7 )
+      {
         result.actions.push_back(action);
       }
     }
-    for(auto& action : computational){
-      if(action.net_gain==max_value){
+    for (auto &action : computational)
+    {
+      if (std::abs(action.net_gain-max_value) <1e-7 )
+      {
         result.actions.push_back(action);
       }
     }
+    for (auto &action : result.actions)
+    {
+      result.gross_gain += probabilities[action.arm] * (action.children[0]->gross_gain+1);
+      result.gross_gain += (1 - probabilities[action.arm]) * action.children[1]->gross_gain;
+    }
+    result.gross_gain /= result.actions.size();
   }
-  auto [new_item_it, new_item_found] = this->data.emplace(belief,result);
+
+  auto [new_item_it, new_item_found] = this->data.emplace(belief, result);
   return new_item_it->second;
 }
 

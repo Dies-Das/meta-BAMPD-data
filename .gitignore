@@ -5,3 +5,4 @@ build/
 __pycache__
 *.png
 .cache
+*.yaml

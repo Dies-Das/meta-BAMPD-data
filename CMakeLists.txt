@@ -20,7 +20,7 @@ FetchContent_MakeAvailable(unordered_dense)
 # Fetch Boost headers
 find_package(Boost REQUIRED)
 # Define executables
-add_executable(meta-BAMDP src/main.cpp src/m_states.cpp src/meta_node.cpp src/meta_policy.cpp)
+add_executable(meta-BAMDP src/main.cpp src/m_states.cpp src/meta_node.cpp src/meta_policy.cpp src/serialize.cpp)
 
 target_link_libraries(meta-BAMDP unordered_dense::unordered_dense)
 target_include_directories(meta-BAMDP PRIVATE ${unordered_dense_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})

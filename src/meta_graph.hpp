@@ -25,6 +25,24 @@ struct BoundingParameters{
   int max_belief_depth;
   int max_belief_size;
   int max_computations;
+  BoundingParameters(BoundingCondition condition, int bound){
+    bounding_type = condition;
+    switch (condition)
+    {
+    case BoundingCondition::DEPTH:
+        max_belief_depth = bound;
+        break;
+    case BoundingCondition::SIZE:
+        max_belief_size = bound;
+        break;
+    case BoundingCondition::COMPUTATIONS:
+        max_computations = bound;
+        break;
+    
+    default:
+        break;
+    }
+  }
 };
 struct MetaGraph;
 struct MetaNode
@@ -53,17 +71,18 @@ struct MetaGraph
     ui max_belief_size;
     ui max_belief_depth;
     ui nr_of_arms;
-    MetaNode root;
+    MetaNode* root;
 
     OptimalPolicy optimal;
     boost::unordered_map<Belief, MetaNode, BeliefHash> nodes;
     BoundingParameters bounds;
-    MetaGraph(BoundingParameters _bounds, ui _max_depth, ui _max_belief_size, ui _max_belief_depth, ui _nr_of_arms) : max_depth(_max_depth), max_belief_size(_max_belief_size), max_belief_depth(_max_belief_depth), nr_of_arms(_nr_of_arms), root(_nr_of_arms,this), optimal(_nr_of_arms, _max_depth), bounds(_bounds)
+    MetaGraph(BoundingParameters _bounds, ui _max_depth, ui _max_belief_size, ui _max_belief_depth, ui _nr_of_arms) : max_depth(_max_depth), max_belief_size(_max_belief_size), max_belief_depth(_max_belief_depth), nr_of_arms(_nr_of_arms),  optimal(_nr_of_arms, _max_depth), bounds(_bounds)
     {
-        std::cout << optimal[root.state] << std::endl;
-
-        nodes.emplace(Belief{StateSet{root.state}, {}}, root);
-        root.expand();
+        State initial_state;
+        initial_state.data.resize(2 * _nr_of_arms);
+        auto [root_it, inserted_root] = nodes.emplace(Belief{StateSet{initial_state}, {}}, MetaNode(_nr_of_arms, this));
+        root = &(root_it->second);
+        root->expand();
     }
     bool stop_expansion(Belief& current_belief, Belief& new_belief);
     bool stop_expansion(State& root_state, State& current_state);

@@ -70,7 +70,7 @@ MetaNode::MetaNode(ui _nr_of_arms, MetaGraph *_meta)
 }
 void MetaNode::expand()
 {
-  std::cout << "Expanding state " << this->state << std::endl;
+
   if (state.sum() == meta->max_depth - 1)
   {
     return;
@@ -79,10 +79,7 @@ void MetaNode::expand()
   { // if we already did this MetaNode, there is nothing to do.
     return;
   }
-  if (state == State{std::vector<ui>{2, 1, 0, 0}})
-  {
-    std::cout << "let's see.." << std::endl;
-  }
+
 
   expanded = true;
   // find the greedy actions corresponding to current belief and if we are an
@@ -122,7 +119,7 @@ void MetaNode::expand()
         continue;
       }
       checked_arm_values.emplace(arm_value);
-      add_child(m_result.indices[choice], belief, true);
+      add_child(choice, belief, true);
     }
   }
   // if we are an M-state, we don't need to do computational expansions
@@ -210,10 +207,7 @@ void MetaNode::computational_expansion(ui terminal_action, ui candidate)
 {
   // check if we can change our mind at all
   //  We will use a vector
-  std::cout << "Doing computational expansion at state " << this->state
-            << ". Greedy action is " << terminal_action
-            << ", we want to change our mind to " << candidate << "\n";
-  
+
   std::vector<ExpansionCandidate> current_expansion;
   std::vector<ExpansionCandidate> next_expansion;
 
@@ -271,6 +265,7 @@ void MetaNode::computational_expansion(ui terminal_action, ui candidate)
     set<Belief, BeliefHash> already_checked;
     for (auto &[current_belief, current_candidates] : current_expansion)
     {
+      
       // Don't need to check beliefs twice. This is a necessary check, at least
       // for performance.
       if (already_checked.find(current_belief) != already_checked.end())
@@ -283,7 +278,10 @@ void MetaNode::computational_expansion(ui terminal_action, ui candidate)
       }
             if (k == 0)
       {
-        std::cout << "doing size " << current_belief.first.size()/2 <<"\n";
+        if(meta->stop_expansion(belief, current_belief)){
+          break;
+        }
+
       }
       k++;
 
@@ -291,6 +289,9 @@ void MetaNode::computational_expansion(ui terminal_action, ui candidate)
       {
         if (candidate_expansion.sum() == meta->max_depth - 1)
         {
+          continue;
+        }
+        if(meta->stop_expansion(this->state, candidate_expansion)){
           continue;
         }
 
@@ -427,6 +428,31 @@ bool MetaGraph::stop_expansion(State &root_state, State &current_state)
   if (this->bounds.bounding_type != BoundingCondition::DEPTH)
   {
     return false;
+  }
+  else{
+    if(this->bounds.max_belief_depth==current_state.sum()-root_state.sum()){
+      return true;
+    }
+  }
+  return false;
+}
+bool MetaGraph::stop_expansion(Belief& current_belief, Belief& new_belief){
+  switch (this->bounds.bounding_type)
+  {
+  case BoundingCondition::COMPUTATIONS:
+    if((new_belief.second.size()-current_belief.second.size())/2>this->bounds.max_computations){
+      return true;
+    }
+    
+    break;
+  case BoundingCondition::SIZE:
+    if((new_belief.second.size()-1)/2>this->bounds.max_belief_size){
+      return true;
+    }
+    break;
+  default:
+  return false;
+    break;
   }
   return false;
 }
