@@ -33,6 +33,7 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
   MetaPolicyItem result;
   result.belief = belief;
   result.gross_gain = 0;
+  result.net_gain = 0;
   MetaNode &current_meta = meta->nodes.at(belief);
 
   auto current_root = find_root(belief);
@@ -48,6 +49,7 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     action.is_computational = false;
     action.net_gain = *max;
     result.gross_gain = *max;
+    result.net_gain = *max;
     result.actions.push_back(action);
   }
 
@@ -109,7 +111,9 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     {
       result.gross_gain += probabilities[action.arm] * (action.children[0]->gross_gain+1);
       result.gross_gain += (1 - probabilities[action.arm]) * action.children[1]->gross_gain;
+      result.net_gain += action.net_gain;
     }
+    result.net_gain /= result.actions.size();
     result.gross_gain /= result.actions.size();
   }
 
@@ -126,8 +130,8 @@ Action MetaPolicy::terminal_action(std::array<MetaNode *, 2> &meta_children, dou
   action.children = {&winning_policy, &losing_policy};
   action.cost_of_action = 0;
   action.is_computational = false;
-  action.net_gain = probability * (winning_policy.actions[0].net_gain + 1);
-  action.net_gain += (1 - probability) * (losing_policy.actions[0].net_gain);
+  action.net_gain = probability * (winning_policy.net_gain + 1);
+  action.net_gain += (1 - probability) * (losing_policy.net_gain);
   return action;
 }
 Action MetaPolicy::computational_action(std::pair<std::array<MetaNode *, 2>, ui> &computational_children, double probability, ui arm)
@@ -139,8 +143,8 @@ Action MetaPolicy::computational_action(std::pair<std::array<MetaNode *, 2>, ui>
   action.children = {&winning_policy, &losing_policy};
   action.cost_of_action = computational_children.second * base_cost;
   action.is_computational = true;
-  action.net_gain = probability * (winning_policy.actions[0].net_gain + 1);
-  action.net_gain += (1 - probability) * (losing_policy.actions[0].net_gain);
+  action.net_gain = probability * (winning_policy.net_gain + 1);
+  action.net_gain += (1 - probability) * (losing_policy.net_gain);
   action.net_gain -= action.cost_of_action;
   return action;
 }

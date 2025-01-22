@@ -22,6 +22,7 @@ struct MetaPolicyItem{
  std::vector<Action> actions;
   Belief belief;
   double gross_gain;
+  double net_gain;
 };
 struct MetaPolicy{
   boost::unordered_map<Belief, MetaPolicyItem, BeliefHash> data;
