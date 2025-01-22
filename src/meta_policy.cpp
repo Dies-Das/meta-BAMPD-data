@@ -71,45 +71,49 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
         computational.push_back(computational_action(child, probabilities[arm_children.first], arm_children.first));
       }
     }
-    auto max_terminal = std::max_element(terminal.begin(), terminal.end());
+    auto terminal_average = 0.0;
+    for (auto &action : terminal)
+    {
+      terminal_average += action.net_gain;
+    }
+    terminal_average /= terminal.size();
     auto max_computational = std::max_element(computational.begin(), computational.end());
     double max_value = 0;
     int terminal_maximizers = 0;
     int computational_maximizers = 0;
-    if (max_terminal == terminal.end())
+
+    if (max_computational == computational.end())
     {
-      max_value = max_computational->net_gain;
-    }
-    else if (max_computational == computational.end())
-    {
-      max_value = max_terminal->net_gain;
+      max_value = terminal_average;
     }
     else
     {
-      max_value = std::max(*max_terminal, *max_computational).net_gain;
+      max_value = std::max(terminal_average, max_computational->net_gain);
     }
-    for (auto &action : terminal)
+    if (std::abs(terminal_average - max_value) < 1e-7)
     {
-      if (std::abs(action.net_gain-max_value) <1e-7 )
+      for (auto &action : terminal)
       {
+
         terminal_maximizers++;
         result.actions.push_back(action);
       }
     }
     for (auto &action : computational)
     {
-      if (std::abs(action.net_gain-max_value) <1e-7 )
+      if (std::abs(action.net_gain - max_value) < 1e-7)
       {
         computational_maximizers++;
         result.actions.push_back(action);
       }
     }
-    if(terminal_maximizers>0&&computational_maximizers==0){
+    if (terminal_maximizers > 0 && computational_maximizers == 0)
+    {
       result.actions = terminal;
     }
     for (auto &action : result.actions)
     {
-      result.gross_gain += probabilities[action.arm] * (action.children[0]->gross_gain+1);
+      result.gross_gain += probabilities[action.arm] * (action.children[0]->gross_gain + 1);
       result.gross_gain += (1 - probabilities[action.arm]) * action.children[1]->gross_gain;
       result.net_gain += action.net_gain;
     }

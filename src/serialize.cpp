@@ -27,7 +27,7 @@ void MetaPolicy::write(const std::string &filename) const
     std::ofstream out(filename);
     if (!out.is_open())
     {
-        // Handle error
+        throw std::runtime_error("Failed to open file: " + filename);
         return;
     }
 
