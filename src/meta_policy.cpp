@@ -72,6 +72,8 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     auto max_terminal = std::max_element(terminal.begin(), terminal.end());
     auto max_computational = std::max_element(computational.begin(), computational.end());
     double max_value = 0;
+    int terminal_maximizers = 0;
+    int computational_maximizers = 0;
     if (max_terminal == terminal.end())
     {
       max_value = max_computational->net_gain;
@@ -88,6 +90,7 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     {
       if (std::abs(action.net_gain-max_value) <1e-7 )
       {
+        terminal_maximizers++;
         result.actions.push_back(action);
       }
     }
@@ -95,8 +98,12 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     {
       if (std::abs(action.net_gain-max_value) <1e-7 )
       {
+        computational_maximizers++;
         result.actions.push_back(action);
       }
+    }
+    if(terminal_maximizers>0&&computational_maximizers==0){
+      result.actions = terminal;
     }
     for (auto &action : result.actions)
     {

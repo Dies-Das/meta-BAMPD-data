@@ -13,7 +13,7 @@ BOUND=3
 # Varying parameters
 T_VALUES=(6 9 12)
 COST_MIN=0.0
-COST_MAX=0.15
+COST_MAX=0.5
 COST_SAMPLES=20
 
 # Create an array of 20 evenly spaced cost values between COST_MIN and COST_MAX
