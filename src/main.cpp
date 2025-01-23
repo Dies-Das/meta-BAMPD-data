@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     else{
             std::ostringstream oss;
             std::string filename = std::format("{}.yaml",args.filename);
-            if (args.filename != "NONE")
+            if (args.filename == "NONE")
             {
                 filename = std::format("meta_policy_t{}.yaml", args.t);
             }
