@@ -35,9 +35,9 @@ def find_values(path):
 
 
 if __name__ == "__main__":
-    times = [6, 9, 12]
-    computations = 3
-    arms = 2
+    times = [6,9,12]
+    computations = 1
+    arms = 3
     min_cost = 0
     max_cost = 0.15
     samples = 200
@@ -48,8 +48,8 @@ if __name__ == "__main__":
     allgains = []
     for t in times:
         filename = f"t_{t}_c"
-        args = ["-o", "temp/", "-t", f"{t}", f"--max", f"{max_cost}", f"--min", f"{
-            min_cost}", f"--samples", f"{samples}", f"--filename", filename, "-s"]
+        args = ["-o", "temp/", "-a", f"{arms}","-t", f"{t}", f"--max", f"{max_cost}", f"--min", f"{
+            min_cost}", f"--samples", f"{samples}", f"--filename", filename, "-s", "-n",f"{computations}"]
         cmd = [executable] + args
         subprocess.run(cmd)
         gains = []

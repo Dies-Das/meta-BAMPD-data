@@ -112,13 +112,13 @@ void MetaNode::expand()
     {
       // if we already looked at an arm with identical wins/losses, we don't
       // need to expand
-      std::pair<ui, ui> arm_value{state[2 * choice], state[2 * choice + 1]};
-      auto found = checked_arm_values.find(arm_value);
-      if (found != checked_arm_values.end())
-      {
-        continue;
-      }
-      checked_arm_values.emplace(arm_value);
+      // std::pair<ui, ui> arm_value{state[2 * choice], state[2 * choice + 1]};
+      // auto found = checked_arm_values.find(arm_value);
+      // if (found != checked_arm_values.end())
+      // {
+      //   continue;
+      // }
+      // checked_arm_values.emplace(arm_value);
       add_child(choice, belief, true);
     }
   }
