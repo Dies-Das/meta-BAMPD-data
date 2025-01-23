@@ -11,7 +11,7 @@ struct MyArgs : public argparse::Args
     std::string &filepath = kwarg("o,output", "Output path for meta policy").set_default("../temp/");
     std::string &filename = kwarg("f,filename", "Name of the output file").set_default("NONE");
     int &bound_type = kwarg("b,bound", "Bound type for meta graph computation. 0 is none, 1 is depth, 2 is size, 3 is computations").set_default(3);
-    int &t = kwarg("t,time", "Time horizon of the game").set_default(6);
+    int &t = kwarg("t,time", "Time horizon of the game").set_default(3);
     int &arms = kwarg("a,arms", "Number of arms").set_default(2);
     int &bound = kwarg("n,number", "Bound size of specified bound").set_default(3);
     double &min = kwarg("min", "Minimum cost of computation").set_default(0.0);

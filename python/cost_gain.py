@@ -15,9 +15,9 @@ def write_data(costs, values):
 def find_values(path):
     found_gross_gain = False
     found_optimal_gain = False
-
+    found_greedy = False
     with open(path, "r") as file:
-        while not (found_optimal_gain and found_gross_gain):
+        while not (found_optimal_gain and found_gross_gain and found_greedy):
             parts = file.readline().strip().split(":")
             if len(parts) == 2:  # Ensure the line has a key-value structure
                 key, value = parts[0].strip(), parts[1].strip()
@@ -28,7 +28,10 @@ def find_values(path):
                 elif key == "optimal_gain":
                     optimal_gain = float(value)  # Convert the value to a float
                     found_optimal_gain = True
-        return gross_gain, optimal_gain
+                elif key == "greedy_gain":
+                    greedy_gain = float(value)
+                    found_greedy=True
+        return gross_gain, optimal_gain, greedy_gain
 
 
 if __name__ == "__main__":
@@ -44,11 +47,6 @@ if __name__ == "__main__":
     executable = "bin/meta-BAMDP"
     allgains = []
     for t in times:
-        GreedyNode.node_dict = {}
-        gr = GreedyNode(0, t, (0, 0, 0, 0))
-        gr.build_tree()
-        gr.eval()
-        greedy_gain = gr.value
         filename = f"t_{t}_c"
         args = ["-o", "temp/", "-t", f"{t}", f"--max", f"{max_cost}", f"--min", f"{
             min_cost}", f"--samples", f"{samples}", f"--filename", filename, "-s"]
@@ -58,10 +56,10 @@ if __name__ == "__main__":
         for k in range(samples):
             # with open(path+filename+f"{k}.yaml", 'r') as f:
             #     data = yaml.safe_load(f)
-            current, optimal = find_values(path+filename+f"{k}.yaml")
+            current, optimal, greedy = find_values(path+filename+f"{k}.yaml")
             # optimal = data["nodes"][0]["optimal_gain"]
             # current = data["nodes"][0]["gross_gain"]
-            gains.append((current-greedy_gain)/(optimal-greedy_gain))
+            gains.append((current-greedy)/(optimal-greedy))
             os.remove(path+filename+f"{k}.yaml")
         plt.plot(costs, gains)
 

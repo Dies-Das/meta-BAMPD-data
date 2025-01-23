@@ -88,6 +88,9 @@ void MetaPolicy::write(const std::string &filename) const
         out << "gross_gain: " << current->gross_gain << "\n";
         indent(out,2);
         out << "optimal_gain: " << meta->optimal[current_state].reward() << "\n";
+        indent(out,2);
+        out << "greedy_gain: " << meta->greedy[current_state].reward << "\n";
+        
         // Write actions
         writeActions(out, current->actions, root, visited, toVisit, 2, is_leaf);
         

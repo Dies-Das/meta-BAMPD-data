@@ -74,9 +74,10 @@ struct MetaGraph
     MetaNode* root;
 
     OptimalPolicy optimal;
+    GreedyPolicy greedy;
     boost::unordered_map<Belief, MetaNode, BeliefHash> nodes;
     BoundingParameters bounds;
-    MetaGraph(BoundingParameters _bounds, ui _max_depth, ui _max_belief_size, ui _max_belief_depth, ui _nr_of_arms) : max_depth(_max_depth), max_belief_size(_max_belief_size), max_belief_depth(_max_belief_depth), nr_of_arms(_nr_of_arms),  optimal(_nr_of_arms, _max_depth), bounds(_bounds)
+    MetaGraph(BoundingParameters _bounds, ui _max_depth, ui _max_belief_size, ui _max_belief_depth, ui _nr_of_arms) : max_depth(_max_depth), max_belief_size(_max_belief_size), max_belief_depth(_max_belief_depth), nr_of_arms(_nr_of_arms),  optimal(_nr_of_arms, _max_depth), greedy(_nr_of_arms,_max_depth),bounds(_bounds)
     {
         State initial_state;
         initial_state.data.resize(2 * _nr_of_arms);
