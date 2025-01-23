@@ -1,5 +1,5 @@
 import subprocess
-import yaml
+import json
 import matplotlib.pyplot as plt
 import os
 from primal_tree import *
@@ -64,12 +64,12 @@ def traverse_graph(current, result: dict, data, probabilities_fixed):
 
 
 if __name__ == "__main__":
-    times = [5]  # , 9, 12]
+    times = [12]
     computations = 3
     arms = 2
     min_cost = 0
     max_cost = 0.15
-    samples = 10
+    samples = 100
     step = (max_cost-min_cost)/(samples-1)
     costs = [step*k for k in range(samples)]
     path = "temp/"
@@ -98,8 +98,8 @@ if __name__ == "__main__":
         for k in range(samples):
             print(f"doing sample {k+1} of {samples}")
             with open(path+filename+f"{k}.yaml", 'r') as f:
-                data = yaml.safe_load(f)
-            result = traverse_graph(0, {}, data, [0.5 for k in range(data["arms"])])
+                data = json.load(f)
+            result = traverse_graph("0", {}, data, [0.5 for k in range(data["arms"])])
             gross_fixed.append(result[0]/data["time_horizon"])
             net_fixed.append(result[1]/data["time_horizon"])
             average_time_uniform.append(result[2]/data["time_horizon"])
