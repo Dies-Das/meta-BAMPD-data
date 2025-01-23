@@ -64,9 +64,9 @@ def traverse_graph(current, result: dict, data, probabilities_fixed):
 
 
 if __name__ == "__main__":
-    times = [12]
+    times = [6]
     computations = 3
-    arms = 2
+    arms = 3
     min_cost = 0
     max_cost = 0.15
     samples = 100
@@ -88,7 +88,7 @@ if __name__ == "__main__":
         greedy_gain = gr.value
         filename = f"t_{t}_c"
         args = ["-o", "temp/", "-t", f"{t}", f"--max", f"{max_cost}", f"--min", f"{
-            min_cost}", f"--samples", f"{samples}", f"--filename", filename, "-s"]
+            min_cost}", f"--samples", f"{samples}", f"--filename", filename, "-s", "-a", f"{arms}"]
         cmd = [executable] + args
         subprocess.run(cmd)
         gross_fixed = []
