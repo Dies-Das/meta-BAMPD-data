@@ -88,7 +88,7 @@ if __name__ == "__main__":
         greedy_gain = gr.value
         filename = f"t_{t}_c"
         args = ["-o", "temp/", "-t", f"{t}", f"--max", f"{max_cost}", f"--min", f"{
-            min_cost}", f"--samples", f"{samples}", f"--filename", filename, "-s", "-a", f"{arms}"]
+            min_cost}", f"--samples", f"{samples}", f"--filename", filename, "-s", "-a", f"{arms}", "-n", f"{computations}"]
         cmd = [executable] + args
         subprocess.run(cmd)
         gross_fixed = []
