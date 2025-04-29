@@ -7,7 +7,7 @@ using ankerl::unordered_dense::map;
 
 struct GreedyPolicyItem
 {
-    vector<double> expeced_gains;
+    vector<double> expected_gains;
     double reward;
     std::vector<ui> actions;
     
@@ -47,7 +47,7 @@ struct GreedyPolicy
 
             for (int k = 0;  k < probabilities.size(); k++)
             {
-                item.expeced_gains.push_back(probabilities[k]);
+                item.expected_gains.push_back(probabilities[k]);
             }
             item.reward = *std::max_element(probabilities.begin(),probabilities.end());
             policy[current] = item;
@@ -74,10 +74,10 @@ struct GreedyPolicy
             double reward_lose = child_item_lose.reward;
 
             double reward = probabilities[ k] * reward_win +(1-probabilities[ k ]) * reward_lose;
-            item.expeced_gains.push_back(reward);
+            item.expected_gains.push_back(reward);
         }
         for(auto index: item.actions){
-            item.reward += item.expeced_gains[index];
+            item.reward += item.expected_gains[index];
         }
         item.reward /= item.actions.size();
         policy[current] = item;

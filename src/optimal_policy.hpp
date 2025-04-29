@@ -38,7 +38,7 @@ struct OptimalPolicy
             item.action = argmax_winprobablity(probabilities);
             for (int k = 0;  k < probabilities.size(); k++)
             {
-                item.expeced_gains.push_back(probabilities[k]);
+                item.expected_gains.push_back(probabilities[k]);
             }
             policy[current] = item;
             return item;
@@ -57,25 +57,25 @@ struct OptimalPolicy
             double reward_lose = child_item_lose.reward();
 
             double reward = probabilities[ k] * reward_win +(1-probabilities[ k ]) * reward_lose;
-            item.expeced_gains.push_back(reward);
+            item.expected_gains.push_back(reward);
         }
 
         // Post-processing step for ties
         // 1. Find the maximum reward among arms
         double max_reward = std::numeric_limits<double>::lowest();
-        for (int k = 0;  k < (int)item.expeced_gains.size(); k++)
+        for (int k = 0;  k < (int)item.expected_gains.size(); k++)
         {
-            if (item.expeced_gains[ k] > max_reward)
+            if (item.expected_gains[ k] > max_reward)
             {
-                max_reward = item.expeced_gains[ k];
+                max_reward = item.expected_gains[ k];
             }
         }
 
         // 2. Identify all arms that are within 1e-7 of this max gain
         std::vector<ui> tied_arms;
-        for (int k = 0;  k < item.expeced_gains.size(); k++)
+        for (int k = 0;  k < item.expected_gains.size(); k++)
         {
-            if (std::fabs(item.expeced_gains[ k] - max_reward) < 1e-7)
+            if (std::fabs(item.expected_gains[ k] - max_reward) < 1e-7)
             {
                 tied_arms.push_back(k);
             }

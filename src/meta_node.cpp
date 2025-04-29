@@ -84,7 +84,7 @@ void MetaNode::expand()
   expanded = true;
   // find the greedy actions corresponding to current belief and if we are an
   // M-state
-  auto &optimal_rewards = meta->optimal[state].expeced_gains;
+  auto &optimal_rewards = meta->optimal[state].expected_gains;
   auto m_result = check_m_state(gains, optimal_rewards);
   // if our arms are identical, we don't need to do computational expansions
   bool are_identical = true;
@@ -301,7 +301,7 @@ void MetaNode::computational_expansion(ui terminal_action, ui candidate)
             eval_basegraph(candidate_expansion, current_belief.first,
                            current_belief.second, meta->max_depth);
         auto &optimal_rewards =
-            meta->optimal[candidate_expansion].expeced_gains;
+            meta->optimal[candidate_expansion].expected_gains;
         auto m_result = check_m_state(new_gains, optimal_rewards);
         if (m_result.indices.size() == meta->nr_of_arms)
         {
@@ -404,7 +404,7 @@ set<State, StateHash> MetaNode::get_candidates(ui candidate)
     }
     auto new_gains =
         eval_basegraph(node, belief.first, belief.second, meta->max_depth);
-    auto &optimal_rewards = meta->optimal[node].expeced_gains;
+    auto &optimal_rewards = meta->optimal[node].expected_gains;
     auto m_result = check_m_state(new_gains, optimal_rewards);
     auto &range = m_result.is_m_state ? m_result.indices : arms;
     for (auto arm : range)

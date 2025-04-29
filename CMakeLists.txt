@@ -21,7 +21,10 @@ FetchContent_MakeAvailable(unordered_dense)
 find_package(Boost REQUIRED)
 # Define executables
 add_executable(meta-BAMDP src/main.cpp src/m_states.cpp src/meta_node.cpp src/meta_policy.cpp src/serialize.cpp)
-
+add_executable(knowledge_graph src/knowledge_main.cpp)
 target_link_libraries(meta-BAMDP unordered_dense::unordered_dense)
 target_include_directories(meta-BAMDP PRIVATE ${unordered_dense_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})
+
+target_link_libraries(knowledge_graph unordered_dense::unordered_dense)
+target_include_directories(knowledge_graph PRIVATE ${unordered_dense_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})
 

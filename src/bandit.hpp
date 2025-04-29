@@ -91,15 +91,15 @@ inline vector<double> get_probabilities(const State &state)
 
 struct PolicyItem
 {
-    vector<double> expeced_gains;
+    vector<double> expected_gains;
     ui action;
     std::vector<ui> actions;
     double reward(){
-        return expeced_gains[action];
+        return expected_gains[action];
     }
     friend std::ostream& operator<<(std::ostream& os, const PolicyItem& item){
         os << "PolicyItem with expected gains: ";
-        for(auto& v:item.expeced_gains){
+        for(auto& v:item.expected_gains){
             os << v << " ";
         }
         os << "and action " << (int)(item.action) << std::endl;
