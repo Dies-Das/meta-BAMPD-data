@@ -38,11 +38,11 @@ int main(int argc, char *argv[])
         for (int k = 0; k < args.samples; k++)
         {
             std::ostringstream oss;
-            std::string filename = std::format("{}{}.yaml",args.filename,k);
+            std::string filename = std::format("{}{}.json",args.filename,k);
 
             if (args.filename == "NONE")
             {
-                filename = std::format("meta_policy_t{}_sample{}.yaml", args.t, k);
+                filename = std::format("meta_policy_t{}_sample{}.json", args.t, k);
             }
             oss << args.filepath << filename;
             auto final_path = oss.str();
@@ -62,10 +62,10 @@ int main(int argc, char *argv[])
     }
     else{
             std::ostringstream oss;
-            std::string filename = std::format("{}.yaml",args.filename);
+            std::string filename = std::format("{}.json",args.filename);
             if (args.filename == "NONE")
             {
-                filename = std::format("meta_policy_t{}.yaml", args.t);
+                filename = std::format("meta_policy_t{}.json", args.t);
             }
             oss << args.filepath << filename;
             auto final_path = oss.str();

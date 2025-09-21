@@ -9,6 +9,7 @@ struct MetaPolicyItem;
 struct Action{
   ui arm;
   bool is_computational;
+  ui computations;
   
   double net_gain;   
   double cost_of_action;

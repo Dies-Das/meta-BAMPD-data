@@ -167,6 +167,7 @@ static void writeActionsJson(std::ostringstream &out,
         out << "          \"arm\": " << action.arm << ",\n";
         out << "          \"is_computational\": " << (action.is_computational ? "true" : "false") << ",\n";
         out << "          \"net_gain\": " << action.net_gain << ",\n";
+        out << "          \"computations\": " << action.computations << ",\n";
         out << "          \"cost_of_action\": " << action.cost_of_action << ",\n";
         out << "          \"children\": [";
         bool firstChild = true;

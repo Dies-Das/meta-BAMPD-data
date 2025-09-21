@@ -132,6 +132,7 @@ Action MetaPolicy::terminal_action(std::array<MetaNode *, 2> &meta_children, dou
   auto &winning_policy = expand(meta_children[0]->belief);
   auto &losing_policy = expand(meta_children[1]->belief);
   action.children = {&winning_policy, &losing_policy};
+  action.computations = 0;
   action.cost_of_action = 0;
   action.is_computational = false;
   action.net_gain = probability * (winning_policy.net_gain + 1);
@@ -145,6 +146,7 @@ Action MetaPolicy::computational_action(std::pair<std::array<MetaNode *, 2>, ui>
   auto &winning_policy = expand(computational_children.first[0]->belief);
   auto &losing_policy = expand(computational_children.first[1]->belief);
   action.children = {&winning_policy, &losing_policy};
+  action.computations = computational_children.second;
   action.cost_of_action = computational_children.second * base_cost;
   action.is_computational = true;
   action.net_gain = probability * (winning_policy.net_gain + 1);
