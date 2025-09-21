@@ -29,7 +29,7 @@ void MetaPolicy::write(const std::string &filename) const {
     json << "{\n";
 
     // Metadata
-    json << "  \"version\": 1,\n";
+    json << "  \"version\": 2,\n";
     json << "  \"base_cost\": " << base_cost << ",\n";
     json << "  \"arms\": " << meta->nr_of_arms << ",\n";
     json << "  \"time_horizon\": " << meta->max_depth << ",\n";
@@ -66,9 +66,11 @@ void MetaPolicy::write(const std::string &filename) const {
     toVisit.push(root);
 
     bool firstNode = true; // Track whether this is the first node to handle commas properly
-    while (!toVisit.empty()) {
-        auto current = toVisit.front();
-        toVisit.pop();
+    // while (!toVisit.empty()) {
+    for(auto& curr: this->data){
+        // auto current = toVisit.front();
+        // toVisit.pop();
+        auto current = &curr.second;
         auto current_state = find_root(current->belief);
         bool is_leaf = current_state.sum() == meta->max_depth - 1;
 
@@ -179,10 +181,10 @@ static void writeActionsJson(std::ostringstream &out,
             if (childPtr && !is_leaf) {
                 std::string childAddr = pointerToString(childPtr, root);
                 out << std::quoted(childAddr);
-                if (!visited[childPtr]) {
-                    visited[childPtr] = true;
-                    toVisit.push(childPtr);
-                }
+                // if (!visited[childPtr]) {
+                //     visited[childPtr] = true;
+                //     toVisit.push(childPtr);
+                // }
             } else {
                 out << "null";
             }
