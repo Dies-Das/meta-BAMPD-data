@@ -50,6 +50,7 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     action.net_gain = *max;
     result.gross_gain = *max;
     result.net_gain = *max;
+    result.voc_bound = *max;
     result.actions.push_back(action);
   }
 
@@ -75,7 +76,10 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     for (auto &action : terminal)
     {
       terminal_average += action.net_gain;
+      result.voc_bound += probabilities[action.arm] * (action.children[0]->gross_gain + 1);
+      result.voc_bound += (1 - probabilities[action.arm]) * action.children[1]->gross_gain;
     }
+    result.voc_bound /= terminal.size(); 
     terminal_average /= terminal.size();
     auto max_computational = std::max_element(computational.begin(), computational.end());
     double max_value = 0;
@@ -119,6 +123,9 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
     }
     result.net_gain /= result.actions.size();
     result.gross_gain /= result.actions.size();
+    result.voc_bound -= result.gross_gain;
+    result.voc_bound *= -1;
+    result.voc_bound *= std::abs(result.voc_bound);
   }
 
   auto [new_item_it, new_item_found] = this->data.emplace(belief, result);

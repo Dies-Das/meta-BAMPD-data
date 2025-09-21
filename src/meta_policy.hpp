@@ -24,6 +24,7 @@ struct MetaPolicyItem{
   Belief belief;
   double gross_gain;
   double net_gain;
+  double voc_bound;
 };
 struct MetaPolicy{
   boost::unordered_map<Belief, MetaPolicyItem, BeliefHash> data;

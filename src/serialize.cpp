@@ -90,6 +90,7 @@ void MetaPolicy::write(const std::string &filename) const {
         json << "      \"optimal_gain\": " << meta->optimal[current_state].reward() << ",\n";
         json << "      \"greedy_gain\": " << meta->greedy[current_state].reward << ",\n";
         json << "      \"net_gain\": " << current->net_gain << ",\n";
+        json << "      \"voc_bound\": " << current->voc_bound << ",\n";
         json << "      \"actions\": ";
         writeActionsJson(json, current->actions, root, visited, toVisit, is_leaf);
         json << "\n    }";
