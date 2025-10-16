@@ -97,13 +97,13 @@ def eval_basegraph(root, nodes, edges, max_depth, special_node=None, special_nod
 
 class MetaGraph:
 
-    def __init__(self, max_depth, max_compute=-1, max_size=-1):
+    def __init__(self, max_depth, max_compute=-1, max_size=-1, old_version=True):
         self.btilde_sizes = {}
         self.nodes = {}
         self.max_depth = max_depth
         self.max_compute = max_compute
         self.max_size = max_size
-
+        self.old_version = old_version
         PrimalNode.node_dict = {}
         primal = PrimalNode(0, max_depth, (0, 0, 0, 0))
         primal.build_tree()
@@ -192,7 +192,8 @@ class MetaNode:
                 key = (potential_children[k], nodes, edges)
 
                 if key not in self.tree.nodes:
-
+                    if key[0]==(1,1,1,0):
+                        pass
                     self.tree.nodes[key] = MetaNode(
                         potential_children[k], nodes, edges, self.tree)
                     self.tree.nodes[key].expand()
@@ -207,7 +208,8 @@ class MetaNode:
                     potential_children[k], self.nodes, self.edges, self.tree.max_depth)
                 key = (potential_children[k], nodes, edges)
                 if key not in self.tree.nodes:
-
+                    if key[0]==(1,1,1,0):
+                        pass
                     self.tree.nodes[key] = MetaNode(
                         potential_children[k], nodes, edges,  self.tree)
                     self.tree.nodes[key].expand()
@@ -224,7 +226,8 @@ class MetaNode:
                         potential_children[k], self.nodes, self.edges, self.tree.max_depth)
                     key = (potential_children[k], nodes, edges)
                     if key not in self.tree.nodes:
-
+                        if key[0]==(1,1,1,0):
+                            pass
                         self.tree.nodes[key] = MetaNode(
                             potential_children[k], nodes, edges, self.tree)
                         self.tree.nodes[key].expand()
@@ -238,7 +241,8 @@ class MetaNode:
                         potential_children[k], self.nodes, self.edges, self.tree.max_depth)
                     key = (potential_children[k], nodes, edges)
                     if key not in self.tree.nodes:
-
+                        if key[0]==(1,1,1,0):
+                            pass
                         self.tree.nodes[key] = MetaNode(
                             potential_children[k], nodes, edges, self.tree)
                         self.tree.nodes[key].expand()
@@ -256,7 +260,8 @@ class MetaNode:
                     key = (
                         potential_children[2*self.prefered_action.value+k], nodes, edges)
                     if key not in self.tree.nodes:
-
+                        if key[0]==(1,1,1,0):
+                            pass
                         self.tree.nodes[key] = MetaNode(
                             potential_children[2*self.prefered_action.value+k], nodes, edges, self.tree)
                         self.tree.nodes[key].expand()
@@ -282,6 +287,8 @@ class MetaNode:
         computational_length = -1
         is_disagreeing = True
         checked_pairs = set()
+        if self.state == (2,1,0,0):
+            pass
         while queue:
 
             current_root, current_nodes, current_edges = queue.popleft()
@@ -418,9 +425,15 @@ class MetaNode:
                                 tuple(expansion_children))
                         expansion_children = []
                     else:
-                        if is_disagreeing:
+                        if self.tree.old_version:
                             queue.appendleft(
                                 (root, new_nodes_temp, new_edges_temp))
+
+                        else:
+                            queue.appendleft(
+                            (children[k], new_nodes_temp, new_edges_temp))
+                            queue.appendleft(
+                                (children[k+1], new_nodes_temp, new_edges_temp))
 
 
         for item in expansion_list:

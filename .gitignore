@@ -1,0 +1,9 @@
+bin/
+#build/
+.vscode
+*.npy
+__pycache__
+*.png
+.cache
+*.yaml
+*.json
