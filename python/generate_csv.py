@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-
+from tqdm import tqdm
 import tempfile, os, subprocess
 
 
@@ -40,8 +40,7 @@ if __name__ == "__main__":
     computations = 2
     metapolicies = {}
     subpolicies = {}
-    for index, row in df.iterrows():
-        print(f"doing row {index}")
+    for index, row in tqdm(df.iterrows()):
         if row["trial_idx"] == 0:
             t = row["horizon"]
             if t not in metapolicies.keys():
@@ -96,7 +95,6 @@ if __name__ == "__main__":
                         dir="/dev/shm", suffix=".json", delete=False
                     ) as tempf:
                         path = tempf.name  # e.g., /dev/shm/tmpabcd.csv
-                    print(f"doing submetagraph for {current_state}")
                     args = [
                         "-o",
                         f"{os.path.dirname(path)}",
