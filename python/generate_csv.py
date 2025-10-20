@@ -37,7 +37,8 @@ if __name__ == "__main__":
     executable = "../bin/meta-BAMDP"
     df = pd.read_csv(datapath)
     arms = 2
-    computations = 2
+    computations = 3
+    computational_cost = 0.001
     metapolicies = {}
     subpolicies = {}
     for index, row in tqdm(df.iterrows()):
@@ -54,7 +55,7 @@ if __name__ == "__main__":
                     "-t",
                     f"{t}",
                     f"--max",
-                    f"{0.001}",
+                    f"{computational_cost}",
                     f"--filename",
                     os.path.basename(path)[:-4],
                     "-a",
@@ -89,12 +90,8 @@ if __name__ == "__main__":
             current_arm = row["arm"]
             action = find_action(current_node, current_arm)
             if action == None:
-                current_state_list = [
-                    current_node["state"][k] for k in range(2 * arms)
-                ]
-                current_state_list[
-                    2 * row["arm"] + (2 * row["reward"]) % 2
-                ] += 1
+                current_state_list = [current_node["state"][k] for k in range(2 * arms)]
+                current_state_list[2 * row["arm"] + (2 * row["reward"]) % 2] += 1
                 current_state = ",".join(map(str, current_state_list))
                 if tuple((t, current_state)) not in subpolicies.keys():
                     with tempfile.NamedTemporaryFile(
@@ -107,7 +104,7 @@ if __name__ == "__main__":
                         "-t",
                         f"{t}",
                         f"--max",
-                        f"{0}",
+                        f"{computational_cost}",
                         f"--filename",
                         os.path.basename(path)[:-4],
                         "-a",
@@ -121,18 +118,12 @@ if __name__ == "__main__":
                     subprocess.run(cmd)
                     with open(path, "r") as file:
                         subpolicies[tuple((t, current_state))] = json.load(file)
-                    current_node = subpolicies[tuple((t, current_state))][
-                        "nodes"
-                    ]["0"]
+                    current_node = subpolicies[tuple((t, current_state))]["nodes"]["0"]
                     os.remove(path)
                 else:
-                    current_node = subpolicies[tuple((t, current_state))][
-                        "nodes"
-                    ]["0"]
+                    current_node = subpolicies[tuple((t, current_state))]["nodes"]["0"]
 
                 metapolicy = subpolicies[tuple((t, current_state))]
             else:
-                current_node = metapolicy["nodes"][
-                    action["children"][row["reward"]]
-                ]
+                current_node = metapolicy["nodes"][action["children"][row["reward"]]]
     df.to_csv("../data/test.csv", index=False)

@@ -376,7 +376,7 @@ bool MetaGraph::stop_expansion(Belief &current_belief, Belief &new_belief) {
   switch (this->bounds.bounding_type) {
   case BoundingCondition::COMPUTATIONS:
     if ((new_belief.second.size() - current_belief.second.size()) / 2 >
-        this->bounds.max_computations) {
+        this->bounds.max_computations - 1) {
       return true;
     }
 
