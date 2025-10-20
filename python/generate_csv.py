@@ -20,16 +20,16 @@ def is_computational(current_node):
 
 
 def number_of_computations(current_node):
-    number = -1
+    computational_actions = 0
+    avg = 0
     for action in current_node["actions"]:
         if action["is_computational"]:
-            if number == -1:
-                number = action["computations"]
-            elif number != action["computations"]:
-                print(number)
-                print(current_node["actions"])
-                raise RuntimeError("Inconsistent number of computations")
-    return 0
+            avg += action["computations"]
+            computational_actions += 1
+    if computational_actions > 0:
+        return avg / computational_actions
+    else:
+        return 0
 
 
 if __name__ == "__main__":
@@ -44,7 +44,6 @@ if __name__ == "__main__":
         if row["trial_idx"] == 0:
             t = row["horizon"]
             if t not in metapolicies.keys():
-                print(f"horizon is {t}")
                 with tempfile.NamedTemporaryFile(
                     dir="/dev/shm", suffix=".json", delete=False
                 ) as tempf:
@@ -55,7 +54,7 @@ if __name__ == "__main__":
                     "-t",
                     f"{t}",
                     f"--max",
-                    f"{0}",
+                    f"{0.001}",
                     f"--filename",
                     os.path.basename(path)[:-4],
                     "-a",
@@ -73,6 +72,7 @@ if __name__ == "__main__":
             else:
                 metapolicy = metapolicies[t]
                 current_node = metapolicy["nodes"]["0"]
+        # print(f"current node is {current_node["state"]}")
         computational = is_computational(current_node)
         number = number_of_computations(current_node)
         voc = current_node["voc_bound"]
@@ -89,7 +89,13 @@ if __name__ == "__main__":
             current_arm = row["arm"]
             action = find_action(current_node, current_arm)
             if action == None:
-                current_state = ",".join(map(str, current_node["state"]))
+                current_state_list = [
+                    current_node["state"][k] for k in range(2 * arms)
+                ]
+                current_state_list[
+                    2 * row["arm"] + (2 * row["reward"]) % 2
+                ] += 1
+                current_state = ",".join(map(str, current_state_list))
                 if tuple((t, current_state)) not in subpolicies.keys():
                     with tempfile.NamedTemporaryFile(
                         dir="/dev/shm", suffix=".json", delete=False
@@ -108,19 +114,25 @@ if __name__ == "__main__":
                         f"{arms}",
                         "-n",
                         f"{computations}",
-                        "state",
+                        "--state",
                         f"{current_state}",
                     ]
                     cmd = [executable] + args
                     subprocess.run(cmd)
                     with open(path, "r") as file:
                         subpolicies[tuple((t, current_state))] = json.load(file)
-                    current_node = subpolicies[tuple((t, current_state))]["nodes"]["0"]
+                    current_node = subpolicies[tuple((t, current_state))][
+                        "nodes"
+                    ]["0"]
                     os.remove(path)
                 else:
-                    current_node = subpolicies[tuple((t, current_state))]["nodes"]["0"]
+                    current_node = subpolicies[tuple((t, current_state))][
+                        "nodes"
+                    ]["0"]
 
                 metapolicy = subpolicies[tuple((t, current_state))]
             else:
-                current_node = metapolicy["nodes"][action["children"][row["reward"]]]
-        df.to_csv("../data/test.csv", index=False)
+                current_node = metapolicy["nodes"][
+                    action["children"][row["reward"]]
+                ]
+    df.to_csv("../data/test.csv", index=False)

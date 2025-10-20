@@ -32,6 +32,7 @@ struct MetaPolicy{
   MetaPolicyItem* root;
   double base_cost;
   MetaPolicy(MetaGraph* _meta, const double _base_cost);
+  MetaPolicy(State initial, MetaGraph* _meta, const double _base_cost);
 
 MetaPolicyItem& expand(const Belief& belief);
 Action terminal_action(std::array<MetaNode*,2>& meta_children, double probability, ui arm);

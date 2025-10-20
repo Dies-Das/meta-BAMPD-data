@@ -52,11 +52,12 @@ int main(int argc, char *argv[]) {
       }
     }
   } else {
+
     State initial;
     if (args.b_state.empty()) {
       initial.data.resize(2 * args.arms);
     } else {
-      std::stringstream ss;
+      std::stringstream ss(args.b_state);
       std::string token;
       while (std::getline(ss, token, ',')) {
         initial.data.push_back(std::stoi(token));
@@ -70,7 +71,7 @@ int main(int argc, char *argv[]) {
     }
     oss << args.filepath << "/" << filename;
     auto final_path = oss.str();
-    auto policy = MetaPolicy(&gr, args.max);
+    auto policy = MetaPolicy(initial,&gr, args.max);
 
     try {
       policy.write(final_path);

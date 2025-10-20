@@ -21,6 +21,13 @@ MetaPolicy::MetaPolicy(MetaGraph *_meta, const double _base_cost) : meta(_meta),
   expand(initial_belief);
   this->root = &data[initial_belief];
 }
+MetaPolicy::MetaPolicy(State initial_state, MetaGraph *_meta, const double _base_cost) : meta(_meta), base_cost(_base_cost)
+{
+
+  Belief initial_belief = Belief{StateSet{initial_state}, {}};
+  expand(initial_belief);
+  this->root = &data[initial_belief];
+}
 MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
 {
   // check if we already did the node
@@ -35,9 +42,7 @@ MetaPolicyItem &MetaPolicy::expand(const Belief &belief)
   result.gross_gain = 0;
   result.net_gain = 0;
   MetaNode &current_meta = meta->nodes.at(belief);
-
   auto current_root = find_root(belief);
-
   auto probabilities = get_probabilities(current_root);
   // check if we're at the end of the time horizon
   if (current_root.sum() == meta->max_depth - 1)

@@ -87,7 +87,7 @@ struct MetaGraph
     }
     MetaGraph(State& _initial_state, BoundingParameters _bounds, ui _max_depth, ui _max_belief_size, ui _max_belief_depth, ui _nr_of_arms) : max_depth(_max_depth), max_belief_size(_max_belief_size), max_belief_depth(_max_belief_depth), nr_of_arms(_nr_of_arms),  optimal(_nr_of_arms, _max_depth), greedy(_nr_of_arms,_max_depth),bounds(_bounds)
     {
-        auto [root_it, inserted_root] = nodes.emplace(Belief{StateSet{_initial_state}, {}}, MetaNode(_nr_of_arms, this));
+        auto [root_it, inserted_root] = nodes.emplace(Belief{StateSet{_initial_state}, {}}, MetaNode(_initial_state,Belief{StateSet{_initial_state}, {}}, this));
         root = &(root_it->second);
         root->expand();
     }

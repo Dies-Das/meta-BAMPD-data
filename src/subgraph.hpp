@@ -6,7 +6,15 @@
 using ankerl::unordered_dense::set;
 using StateSet = set<State, StateHash>;
 using Edge = std::array<State, 2>;
-
+inline std::ostream& operator<<(std::ostream& os, const StateSet& states) {
+    os << "{";
+    for (auto it = states.begin(); it != states.end(); ++it) {
+        if (it != states.begin()) os << ", ";
+        os << *it;
+    }
+    os << "}";
+    return os;
+}
 struct StateSetHash
 {
     using is_avalanching = void;
