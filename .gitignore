@@ -1,5 +1,6 @@
 bin/
 build/
+python/venv/
 .vscode
 *.npy
 __pycache__
