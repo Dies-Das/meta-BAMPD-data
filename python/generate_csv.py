@@ -43,6 +43,7 @@ if __name__ == "__main__":
     subpolicies = {}
     for index, row in tqdm(df.iterrows()):
         if row["trial_idx"] == 0:
+            state = [0,0,0,0]
             t = row["horizon"]
             if t not in metapolicies.keys():
                 with tempfile.NamedTemporaryFile(
@@ -64,6 +65,7 @@ if __name__ == "__main__":
                     f"{computations}",
                 ]
                 cmd = [executable] + args
+
                 subprocess.run(cmd)
                 with open(path, "r") as file:
                     metapolicies[t] = json.load(file)
@@ -73,7 +75,7 @@ if __name__ == "__main__":
             else:
                 metapolicy = metapolicies[t]
                 current_node = metapolicy["nodes"]["0"]
-        # print(f"current node is {current_node["state"]}")
+
         computational = is_computational(current_node)
         number = number_of_computations(current_node)
         voc = current_node["voc_bound"]
@@ -88,6 +90,7 @@ if __name__ == "__main__":
             continue
         else:
             current_arm = row["arm"]
+ 
             action = find_action(current_node, current_arm)
             if action == None:
                 current_state_list = [current_node["state"][k] for k in range(2 * arms)]
@@ -125,5 +128,10 @@ if __name__ == "__main__":
 
                 metapolicy = subpolicies[tuple((t, current_state))]
             else:
-                current_node = metapolicy["nodes"][action["children"][row["reward"]]]
+
+                if row["reward"]:
+                    current_node = metapolicy["nodes"][action["children"][0]]
+                else:
+                    current_node = metapolicy["nodes"][action["children"][1]]
+
     df.to_csv("../data/test.csv", index=False)
